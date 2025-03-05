@@ -2,7 +2,7 @@ import googleapiclient.discovery
 from datetime import datetime
 import csv
 import re
-import os
+import os  # Adicione esta linha
 
 def coletar_videos_populares(youtube):
     request = youtube.videos().list(
@@ -114,7 +114,7 @@ def exportar_para_csv(dados, nome_arquivo="dados_videos.csv"):
     print(f"✅ Dados coletados e salvos em {nome_arquivo}")
 
 def main():
-    API_KEY = "SUA_CHAVE_DE_API"  # Substitua pela sua chave de API
+    API_KEY = os.environ.get("API_KEY")  # Use a chave de API do segredo
     youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=API_KEY)
     videos = coletar_videos_populares(youtube)
     dados_coletados = processar_dados(youtube, videos)
