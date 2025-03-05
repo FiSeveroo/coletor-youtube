@@ -26,6 +26,13 @@ jobs:
       - name: Executar coletor
         run: python3 main.py
 
+      - name: Verificar se o CSV foi gerado
+        run: |
+          if [ ! -f *.csv ]; then
+            echo "Nenhum arquivo CSV foi gerado."
+            exit 1
+          fi
+
       - name: Commit e push do CSV
         run: |
           git config --global user.name "GitHub Actions"
