@@ -113,13 +113,13 @@ def exportar_para_csv(dados, nome_arquivo="dados_videos.csv"):
         escritor_csv.writerows(dados)
     print(f"✅ Dados coletados e salvos em {nome_arquivo}")
 
-
 def main():
     API_KEY = os.environ.get("API_KEY")  # Use a chave de API do segredo
-    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=API_KEY, static_discovery=False)
+    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=API_KEY, static_discovery=False, credentials=None)
     videos = coletar_videos_populares(youtube)
     dados_coletados = processar_dados(youtube, videos)
     exportar_para_csv(dados_coletados)
+
 
 if __name__ == "__main__":
     main()
