@@ -1,0 +1,29 @@
+name: Executar Coleta de Vídeos do YouTube
+
+on:
+  schedule:
+    - cron: '0 12,20 * * *'  # Executa às 8h e 20h todos os dias
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      API_KEY: ${{ secrets.API_KEY }}  # Passa a chave de API do segredo
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v2
+
+      - name: Configurar Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Instalar dependências
+        run: |
+          pip install notebook pandas requests
+
+      - name: Executar notebook
+        run: |
+          jupyter nbconvert --to python Coleta.ipynb
+          python3 Coleta.py
