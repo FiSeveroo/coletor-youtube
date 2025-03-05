@@ -143,7 +143,6 @@ def exportar_para_csv(dados):
     print(f"✅ Dados coletados e salvos em {nome_arquivo}")
     print(f"Caminho completo do arquivo: {os.path.abspath(nome_arquivo)}")
 
-
 # Função principal
 def main():
     API_KEY = os.environ.get("API_KEY")  # Use a chave de API do segredo
