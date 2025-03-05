@@ -99,19 +99,25 @@ def processar_dados(youtube, videos):
         dados_coletados.append(data)
     return dados_coletados
 
-def exportar_para_csv(dados, nome_arquivo="dados_videos.csv"):
+def exportar_para_csv(dados):
+    # Ajustar o formato da data e hora para o nome do arquivo
+    tz = pytz.timezone('America/Sao_Paulo')
+    hora_atual = datetime.now(tz)
+    nome_arquivo = hora_atual.strftime("%Hh%Mm %d.%m.%Y") + ".csv"
+
     campos = [
         "Posicao na coleta", "Gênero do vídeo", "Tipo de produtor", "Categoria do vídeo", "guideCategory",
         "Taxa de engajamento", "Idioma", "Posicao Geral", "Id do canal", "Canal", "Inscritos no canal",
         "Id do vídeo", "Data de publicação", "Diferenca de horas entre postagem e coleta", "Título do vídeo",
         "Descrição do vídeo", "Tags do video", "Duração do vídeo", "Visualizações", "Gostei", "Comentários",
-        "thumbnail_maxres"
+        "thumbnail_maxres", "Pais"
     ]
     with open(nome_arquivo, mode="w", newline="", encoding="utf-8") as arquivo_csv:
         escritor_csv = csv.DictWriter(arquivo_csv, fieldnames=campos)
         escritor_csv.writeheader()
         escritor_csv.writerows(dados)
     print(f"✅ Dados coletados e salvos em {nome_arquivo}")
+    print(f"Caminho completo do arquivo: {os.path.abspath(nome_arquivo)}")
 
 def main():
     API_KEY = os.environ.get("API_KEY")  # Use a chave de API do segredo
