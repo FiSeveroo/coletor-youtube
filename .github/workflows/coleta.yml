@@ -32,4 +32,4 @@ jobs:
           git config --global user.email "actions@github.com"
           git add *.csv
           git commit -m "Atualização automática dos dados"
-          git push https://${{ secrets.token de acesso pessoal }}@github.com/${{ github.repository }}.git
+          git push https://${{ secrets.token_de_acesso_pessoal }}@github.com/${{ github.repository }}.git
