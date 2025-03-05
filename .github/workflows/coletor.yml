@@ -17,9 +17,10 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Instalar dependências
-        run: |
-          pip install google-api-python-client pandas
+- name: Instalar dependências
+  run: |
+    pip install notebook pandas requests google-api-python-client
+
 
       - name: Executar coletor
         run: python3 main.py
