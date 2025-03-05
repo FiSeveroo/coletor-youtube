@@ -11,5 +11,8 @@ COPY requirements.txt .
 # Instalar as dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Instalar pytz (necessário para o fuso horário)
+RUN pip install --no-cache-dir pytz
+
 # Definir o comando que será executado quando o container iniciar
 CMD ["python", "main.py"]
