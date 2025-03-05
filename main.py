@@ -2,8 +2,10 @@ import googleapiclient.discovery
 from datetime import datetime
 import csv
 import re
-import os  # Adicione esta linha
+import os
+import pytz  # Adicione esta linha para trabalhar com fusos horários
 
+# Função para coletar vídeos populares
 def coletar_videos_populares(youtube):
     request = youtube.videos().list(
         part="snippet,contentDetails,statistics",
@@ -14,6 +16,7 @@ def coletar_videos_populares(youtube):
     response = request.execute()
     return response["items"]
 
+# Função para converter duração ISO 8601 para HH:MM:SS
 def formatar_duracao(duracao_iso):
     try:
         padrao = re.compile(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?')
@@ -25,6 +28,7 @@ def formatar_duracao(duracao_iso):
     except:
         return "00:00:00"
 
+# Função para buscar o guideCategory do canal
 def buscar_guide_category(youtube, channel_id):
     try:
         channel_request = youtube.channels().list(
@@ -42,6 +46,24 @@ def buscar_guide_category(youtube, channel_id):
         print(f"Erro ao buscar guideCategory: {e}")
         return "N/A"
 
+# Função para buscar o país do canal
+def buscar_pais(youtube, channel_id):
+    try:
+        channel_request = youtube.channels().list(
+            part="snippet",
+            id=channel_id
+        )
+        channel_response = channel_request.execute()
+        if "items" in channel_response and channel_response["items"]:
+            country = channel_response["items"][0].get("snippet", {}).get("country", "N/A")
+            return country
+        else:
+            return "N/A"
+    except Exception as e:
+        print(f"Erro ao buscar país: {e}")
+        return "N/A"
+
+# Função para processar os dados dos vídeos
 def processar_dados(youtube, videos):
     dados_coletados = []
     for index, item in enumerate(videos):
@@ -72,6 +94,7 @@ def processar_dados(youtube, videos):
             "Gostei": statistics.get("likeCount", 0),
             "Comentários": statistics.get("commentCount", 0),
             "thumbnail_maxres": snippet.get("thumbnails", {}).get("maxres", {}).get("url", ""),
+            "Pais": buscar_pais(youtube, snippet.get("channelId", "")),  # Adicionado país do canal
         }
         try:
             views = int(data["Visualizações"])
@@ -99,6 +122,7 @@ def processar_dados(youtube, videos):
         dados_coletados.append(data)
     return dados_coletados
 
+# Função para exportar os dados para CSV
 def exportar_para_csv(dados):
     # Ajustar o formato da data e hora para o nome do arquivo
     tz = pytz.timezone('America/Sao_Paulo')
@@ -119,13 +143,13 @@ def exportar_para_csv(dados):
     print(f"✅ Dados coletados e salvos em {nome_arquivo}")
     print(f"Caminho completo do arquivo: {os.path.abspath(nome_arquivo)}")
 
+# Função principal
 def main():
     API_KEY = os.environ.get("API_KEY")  # Use a chave de API do segredo
     youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=API_KEY, static_discovery=False, credentials=None)
     videos = coletar_videos_populares(youtube)
     dados_coletados = processar_dados(youtube, videos)
     exportar_para_csv(dados_coletados)
-
 
 if __name__ == "__main__":
     main()
