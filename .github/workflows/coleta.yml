@@ -33,6 +33,11 @@ jobs:
             exit 1
           fi
 
+- name: Debug Info
+  run: |
+    git remote -v
+    git config --list
+
       - name: Commit e push do CSV
         env:
           GITHUB_TOKEN: ${{ secrets.TOKENV2 }}  # Use o nome do segredo que você criou
