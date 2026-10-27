@@ -7,17 +7,17 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       API_KEY: ${{ secrets.API_KEY }}  # Chave da API do YouTube
     steps:
       - name: Checkout código
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
 
       - name: Configurar Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.8'
+          python-version: '3.12'
 
       - name: Instalar dependências
         run: |
